@@ -1,7 +1,9 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
+public enum ControlTypes { GAMEPAD_CONTROLLER, KEYBOARD_PC }
 public class CharacterMovement : MonoBehaviour
 {
     [SerializeField] float playerSpeed = 15f, jumpForce = 400f;
@@ -16,10 +18,26 @@ public class CharacterMovement : MonoBehaviour
     Vector3 playerMovement;
 
     Vector3 direcaoDeMovimento;
-    // Start is called before the first frame update
-    void Start()
+
+    PlayerActions controls;
+    [SerializeField] ControlTypes controlTypes;
+    bool PC;
+    void Awake()
     {
         characterController = GetComponent<CharacterController>();
+        controls = new PlayerActions();
+        switch (controlTypes)
+        {
+            case ControlTypes.GAMEPAD_CONTROLLER:
+                controls.Gameplay.Move.performed += ctx => Movement();
+                break;
+            case ControlTypes.KEYBOARD_PC:
+                PC = true;
+                break;
+        }
+        
+
+       
     }
 
     //void CheckMovementConditions(float xAxis,float zAxis)
@@ -35,8 +53,23 @@ public class CharacterMovement : MonoBehaviour
     //        direcaoDeMovimento = new Vector3(xAxis, 0f, zAxis).normalized;
     //    }
     //}
-   
+
+    private void OnEnable()
+    {
+        controls.Gameplay.Enable();
+    }
+    private void OnDisable()
+    {
+        controls.Gameplay.Disable();
+    }
     void Update()
+    {
+        if (PC)
+        {
+            Movement();
+        }
+    }
+    void Movement()
     {
         float xAxis = Input.GetAxis("Horizontal");
         float zAxis = Input.GetAxis("Vertical");
