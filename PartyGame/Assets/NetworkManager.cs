@@ -11,8 +11,8 @@ public class NetworkManager : MonoBehaviourPunCallbacks
         PhotonNetwork.ConnectUsingSettings();
     }
 
-    public override void OnConnectedToMaster()
-    {
-        print("A gente está na conectado na região: " + PhotonNetwork.CloudRegion);
-    }
+    //public override void OnConnectedToMaster()
+    //{
+    //    print("A gente está na conectado na região: " + PhotonNetwork.CloudRegion);
+    //}
 }
